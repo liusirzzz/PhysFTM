@@ -1,0 +1,41 @@
+# PhysFTM paper configuration.
+run:
+  results_dir: null
+  results_prefix: ac2d_spatial_infer
+  device: cuda:0
+artifact:
+  ftm_manifest_path: ${oc.env:PHYSFTM_AC_FTM_MANIFEST}
+data:
+  data_manifest_path: ${oc.env:PHYSFTM_AC_BASE_MANIFEST}
+  split: test
+  batch_size: 32
+  auto_crop_time_to_core: none
+core:
+  lambda_core_ridge: 0.01
+  beta_core_tv: 0.01
+  cg_max_iter: 30
+  cg_tol: 0.0001
+  prior_core_mode: mean
+pde:
+  dataset_type: ac
+  point_sample_ratio: 0.25
+  point_max_points: 0
+  query_chunk_size: 2048
+  domain:
+    Lx: 1.0
+    Ly: 1.0
+    Lz: 1.0
+    dt: null
+    query_dt: null
+  ac:
+    fd_dx: 0.0004
+    fd_dy: 0.0004
+    fd_space_order: 2
+    fd_time_order: 2
+    lambda_: 1.0
+    epsilon: 0.01
+eval:
+  skip_ssim: false
+  n_plot_samples: 3
+  plot_time_indices: 0,100,200
+  save_dtype: float32

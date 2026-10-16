@@ -1,0 +1,74 @@
+# PhysFTM paper configuration.
+run:
+  data_name: ac2d
+  seed: 123
+data:
+  data_manifest_path: ${oc.env:PHYSFTM_AC_BASE_MANIFEST}
+  data_path: null
+  metadata_path: null
+  dataset_type: ac
+  batch_size: 8
+  num_workers: 0
+model:
+  R:
+  - 48
+  - 48
+  - 1
+  core_parameterization: per_time
+  norm_mode: channelwise_zscore
+optimization:
+  learning_rate: 2e-4
+  max_epochs: 500
+  print_every: 50
+  eval_every: 50
+  profile_every: 0
+core:
+  core_update_mode: cg
+  core_learning_rate: 0.0
+  lambda_core_ridge: 0.01
+  beta_core_tv: 0.01
+  als_core_cg_iter: 5
+  als_core_cg_tol: 0.001
+  als_core_steps: 1
+basis:
+  als_basis_steps: 1
+  basis_update_mode: adam
+rkhs:
+  lambda_rkhs: 0.0001
+  lambda_time: 1e-5
+  coef_scale: 1e-2
+  kernel_type: matern32
+  num_inducing_u: null
+  num_inducing_v: null
+  lengthscale_u: null
+  lengthscale_v: null
+pde:
+  lambda_pde_point: 1
+  point_sample_ratio: 0.005
+  point_max_points: 0
+  query_chunk_size: 2048
+  point_sample_mode: unobserved_grid
+  start_step: 0
+  monitor_always: true
+  monitor_point: true
+  domain:
+    Lx: 1.0
+    Ly: 1.0
+    Lz: 1.0
+    dt: null
+    query_dt: null
+  ac:
+    fd_dx: 0.0004
+    fd_dy: 0.0004
+    fd_space_order: 2
+    fd_time_order: 2
+    lambda_: 1.0
+    epsilon: 0.01
+plots:
+  reconstruction_on_log: true
+  pde_residual_on_log: true
+  pde_residual_sample_index: 0
+  pde_residual_sample_indices:
+  - 0
+  - 1
+  - 2

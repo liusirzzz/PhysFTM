@@ -1,0 +1,91 @@
+# PhysFTM paper configuration.
+run:
+  results_dir: null
+  results_prefix: heat3d_temporal_train
+  device: cuda:0
+  do_inference: false
+artifact:
+  ftm_manifest_path: ${oc.env:PHYSFTM_HEAT3D_FTM_MANIFEST}
+data:
+  data_manifest_path: ${oc.env:PHYSFTM_HEAT3D_BASE_MANIFEST}
+  batch_size: 32
+core:
+  lambda_core_ridge: 0.01
+  beta_core_tv: 0.01
+  cg_max_iter: 30
+  cg_tol: 0.0001
+  prior_core_mode: mean
+temporal:
+  method: odernn
+  model_space: core
+  override_anchor_times: true
+  load_if_exists: false
+  save_model: true
+  model_path: ${oc.env:PHYSFTM_HEAT3D_TEMPORAL_MODEL}
+  query:
+    times: []
+    start: null
+    end: null
+    num: 0
+    match_tol: 1.0e-07
+  inference_mask:
+    template: all
+    template_seed: 123
+    mode: identity
+    observed_ratio: 0.0
+    seed: 123
+  odernn:
+    hidden_dim: 256
+    ode_hidden_dim: 256
+    train_epochs: 20
+    train_batch_size: 4
+    learning_rate: 0.001
+    weight_decay: 1.0e-06
+    train_time_mask_mechanisms:
+    - random_drop_half
+    val_time_mask_mechanisms:
+    - random_drop_half
+    train_keep_ratio: 0.5
+    train_seed: 123
+    val_seed: 123
+    observed_ratio_list:
+    - 0.5
+    core_loss_weight: 1.0
+pde:
+  dataset_type: heat3d
+  lambda_pde_point: 0.0
+  point_sample_ratio: 0.25
+  point_max_points: 0
+  query_chunk_size: 512
+  time_query_substeps: 1
+  start_step: 0
+  monitor_always: false
+  monitor_point: false
+  domain:
+    Lx: 1.0
+    Ly: 1.0
+    Lz: 1.0
+    dt: null
+  heat3d:
+    alpha: 0.01
+    fd_dx: 0.00158730159
+    fd_dy: 0.00158730159
+    fd_dz: 0.00158730159
+    fd_space_order: 2
+eval:
+  n_plot_samples: 1
+  plot_time_indices:
+  - 0
+  - 25
+  - 49
+  save_dtype: float32
+  skip_save_predictions: false
+  skip_ssim: true
+plots:
+  reconstruction_on_log: false
+  pde_residual_on_log: false
+  pde_residual_sample_index: 0
+  pde_residual_sample_indices:
+  - 0
+  - 1
+  - 2
